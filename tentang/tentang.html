@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tentang — Putra Rivaldo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c12; --panel:#141827; --line:#232a3d;
+    --ink:#eef1f7; --ink-dim:#9aa3b8; --ink-faint:#5c657c;
+    --red:#c8102e; --red-glow:#ff2d4d; --blue:#2447c4; --blue-glow:#4e78ff;
+    --mono:'IBM Plex Mono', monospace; --sans:'Inter', sans-serif; --display:'Archivo Black', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;
+    background-image:
+      radial-gradient(ellipse 900px 500px at 85% -5%, rgba(200,16,46,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -5% 40%, rgba(36,71,196,0.10), transparent 60%);
+  }
+  main{flex:1;position:relative;z-index:1;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--red);color:#fff;}
+  :focus-visible{outline:2px solid var(--blue-glow);outline-offset:3px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* NAV */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,18,0.72);border-bottom:1px solid var(--line);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;max-width:1180px;margin:0 auto;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:600;font-size:15px;}
+  .logo-mark{width:30px;height:30px;flex:none;}
+  .navlinks{display:none;gap:34px;font-family:var(--mono);font-size:13px;letter-spacing:0.04em;color:var(--ink-dim);}
+  @media(min-width:760px){.navlinks{display:flex;}}
+  .navlinks a{position:relative;padding:4px 0;transition:color .2s;}
+  .navlinks a:hover,.navlinks a.active{color:var(--ink);}
+  .navlinks a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:1.5px;background:var(--red);transition:width .25s;}
+  .navlinks a:hover::after,.navlinks a.active::after{width:100%;}
+
+  .btn{font-family:var(--mono);font-size:13.5px;letter-spacing:0.02em;padding:13px 24px;border-radius:3px;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
+  .btn-primary{background:var(--red);color:#fff;}
+  .btn-primary:hover{background:var(--red-glow);}
+  .btn-ghost{border-color:var(--line);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--ink-faint);background:var(--panel);}
+
+  /* KONTEN */
+  .page{padding:72px 0 100px;}
+  .back{font-family:var(--mono);font-size:12.5px;color:var(--ink-dim);display:inline-block;margin-bottom:28px;}
+  .back:hover{color:var(--ink);}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,5.4vw,58px);line-height:1.04;letter-spacing:-0.01em;margin-bottom:40px;}
+
+  .about-grid{display:grid;grid-template-columns:1fr;gap:44px;align-items:start;}
+  @media(min-width:860px){.about-grid{grid-template-columns:1.3fr 1fr;}}
+  .about-text p{color:var(--ink-dim);font-size:16px;margin-bottom:18px;max-width:600px;}
+  .about-text b{color:var(--ink);font-weight:600;}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .stat{background:var(--panel);padding:24px 16px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+  .stat .num{font-family:var(--display);font-size:28px;color:var(--red-glow);margin-bottom:4px;}
+  .stat .lbl{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:0.04em;}
+
+  .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px;}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;text-align:center;position:relative;z-index:1;}
+  footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);}
+
+</style>
+</head>
+<body>
+
+<canvas id="webCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
+<header>
+  <nav>
+    <a href="../index.html" class="logo" aria-label="Kembali ke beranda">
+      <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" stroke="#c8102e" stroke-width="1.4"/>
+        <path d="M16 1v30M1 16h30M5 5l22 22M27 5L5 27M9 1.5L16 16l7-14.5M9 30.5L16 16l7 14.5M1.5 9L16 16 1.5 23M30.5 9L16 16l14.5 7" stroke="#c8102e" stroke-width="0.7" opacity="0.65"/>
+      </svg>
+      <span style="color:var(--red-glow)">Tentang</span>
+    </a>
+    <div class="navlinks">
+      <a href="tentang.html" class="active" aria-current="page">Tentang</a>
+      <a href="../keahlian/keahlian.html">Keahlian</a>
+      <a href="../proyek/proyek.html">Proyek</a>
+      <a href="../sertifikasi/sertifikasi.html">Sertifikasi</a>
+      <a href="../kontak/kontak.html">Kontak</a>
+    </div>
+    <a href="../kontak/kontak.html" class="btn btn-ghost" style="padding:9px 18px;">Hubungi</a>
+  </nav>
+</header>
+
+<main>
+  <section class="page">
+    <div class="wrap">
+      <a href="../index.html" class="back">← Kembali ke beranda</a>
+      <h1>Tentang saya</h1>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <p>Saya seorang <b>pengembang full-stack</b> yang percaya kalau kode terbaik itu seperti kekuatan super: kelihatan sederhana dari luar, tapi disiplin dan latihan panjang ada di baliknya. Fokus saya adalah membangun aplikasi web yang cepat, rapi, dan enak dipakai, dari rancangan antarmuka sampai arsitektur di belakang layar.</p>
+          <p>Selain menulis kode, saya senang mendalami <b>arsitektur sistem</b>, <b>optimasi performa</b>, dan mengubah kebutuhan yang rumit jadi solusi yang terasa ringan bagi pengguna. Saat ini terbuka untuk kolaborasi proyek maupun peluang kerja penuh waktu.</p>
+
+          <div class="cta-row">
+            <a href="../proyek/proyek.html" class="btn btn-primary">Lihat proyek</a>
+            <a href="../sertifikasi/sertifikasi.html" class="btn btn-ghost">Lihat sertifikasi</a>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat"><div class="num">3+</div><div class="lbl">Tahun pengalaman</div></div>
+          <div class="stat"><div class="num">20+</div><div class="lbl">Proyek selesai</div></div>
+          <div class="stat"><div class="num">10+</div><div class="lbl">Teknologi</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Putra Rivaldo. Dibangun dengan Laravel &amp; sedikit sihir CSS.</p>
+</footer>
+
+<script>
+/* Latar jaring laba-laba (sama dengan halaman lain) */
+(function(){
+  const canvas = document.getElementById('webCanvas');
+  const ctx = canvas.getContext('2d');
+  let width, height, particles = [];
+  const mouse = { x:null, y:null, maxDist:170 };
+
+  function resize(){ width = canvas.width = innerWidth; height = canvas.height = innerHeight; init(); }
+  addEventListener('resize', resize);
+  addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  addEventListener('mouseleave', () => { mouse.x = mouse.y = null; });
+
+  function init(){
+    particles = [];
+    const count = Math.min(Math.floor((width * height) / 9500), 120);
+    for (let i = 0; i < count; i++){
+      particles.push({
+        x: Math.random()*width, y: Math.random()*height,
+        vx: (Math.random()-0.5)*1.2, vy: (Math.random()-0.5)*1.2,
+        r: Math.random()*2+1,
+        c: Math.random() > 0.3 ? '255,45,77' : '78,120,255',
+        a: Math.random()*0.5+0.4
+      });
+    }
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,width,height);
+    for (const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${p.c},${p.a})`; ctx.fill();
+    }
+    for (let i = 0; i < particles.length; i++){
+      for (let j = i+1; j < particles.length; j++){
+        const d = Math.hypot(particles[i].x-particles[j].x, particles[i].y-particles[j].y);
+        if (d < 140){
+          ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle = `rgba(200,30,70,${(1-d/140)*0.35})`; ctx.lineWidth = 0.8; ctx.stroke();
+        }
+      }
+      if (mouse.x !== null){
+        const d = Math.hypot(particles[i].x-mouse.x, particles[i].y-mouse.y);
+        if (d < mouse.maxDist){
+          ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(mouse.x,mouse.y);
+          ctx.strokeStyle = `rgba(255,45,77,${(1-d/mouse.maxDist)*0.75})`; ctx.lineWidth = 1.2; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  resize();
+  animate();
+})();
+</script>
+<!-- ===== TEKS PENGIKUT KURSOR + JARING LABA-LABA ===== -->
+<style>
+  #followCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90;}
+  .cursor-label{
+    position:fixed;left:0;top:0;z-index:91;pointer-events:none;
+    font-family:var(--mono);font-size:12.5px;font-weight:600;color:#fff;white-space:nowrap;
+    background:rgba(20,24,39,0.9);border:1px solid var(--red-glow);border-radius:20px;
+    padding:7px 14px;box-shadow:0 0 18px rgba(255,45,77,0.35);
+    opacity:0;transition:opacity .25s;will-change:transform;
+  }
+  .cursor-label.show{opacity:1;}
+</style>
+
+<canvas id="followCanvas"></canvas>
+<div class="cursor-label" id="cursorLabel">Ayo bekerja sama</div>
+
+<script>
+(function(){
+
+  const cv = document.getElementById('followCanvas');
+  const ctx = cv.getContext('2d');
+  const label = document.getElementById('cursorLabel');
+  const dpr = window.devicePixelRatio || 1;
+  let W, H;
+  function size(){ W = innerWidth; H = innerHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  size(); addEventListener('resize', size);
+
+  const mouse = { x: W/2, y: H/2, on: false };
+  const tag = { x: W/2, y: H/2, vx: 0, vy: 0 };   // posisi teks (bergantung seperti laba-laba)
+  const HANG = 70;                                 // panjang benang di bawah kursor
+  let rot = 0, scale = 0;
+
+  addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;   // hanya untuk mouse, bukan sentuhan layar
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    if (!mouse.on){ mouse.on = true; tag.x = mouse.x; tag.y = mouse.y + HANG; }
+    label.classList.add('show');
+  });
+  document.addEventListener('mouseleave', () => { mouse.on = false; label.classList.remove('show'); });
+
+  // Jaring laba-laba kecil di ujung kursor
+  function drawWeb(cx, cy, r, a){
+    const spokes = 8, rings = 4, step = Math.PI*2/spokes;
+    ctx.strokeStyle = `rgba(255,45,77,${a})`;
+    ctx.lineWidth = 0.9;
+    for (let i = 0; i < spokes; i++){
+      const ang = rot + i*step;
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(ang)*r, cy + Math.sin(ang)*r); ctx.stroke();
+    }
+    for (let k = 1; k <= rings; k++){
+      const rr = r*k/rings;
+      ctx.beginPath();
+      for (let i = 0; i < spokes; i++){
+        const a1 = rot + i*step, a2 = a1 + step, am = a1 + step/2;
+        const x1 = cx + Math.cos(a1)*rr, y1 = cy + Math.sin(a1)*rr;
+        const x2 = cx + Math.cos(a2)*rr, y2 = cy + Math.sin(a2)*rr;
+        const qx = cx + Math.cos(am)*rr*0.78, qy = cy + Math.sin(am)*rr*0.78; // benang melengkung ke dalam
+        if (i === 0) ctx.moveTo(x1, y1);
+        ctx.quadraticCurveTo(qx, qy, x2, y2);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function loop(){
+    ctx.clearRect(0, 0, W, H);
+
+    // Fisika pegas: teks mengayun mengikuti kursor
+    const tx = mouse.x, ty = mouse.y + HANG;
+    tag.vx = (tag.vx + (tx - tag.x)*0.06) * 0.84;
+    tag.vy = (tag.vy + (ty - tag.y)*0.06) * 0.84;
+    tag.x += tag.vx; tag.y += tag.vy;
+
+    scale += ((mouse.on ? 1 : 0) - scale) * 0.12;
+    rot += 0.004;
+
+    if (scale > 0.01){
+      const w = label.offsetWidth, h = label.offsetHeight;
+      const topX = tag.x, topY = tag.y - h/2;
+
+      // Benang dari kursor ke teks
+      ctx.strokeStyle = `rgba(238,241,247,${0.55*scale})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(mouse.x, mouse.y);
+      ctx.quadraticCurveTo((mouse.x + topX)/2 - tag.vx*2, (mouse.y + topY)/2, topX, topY);
+      ctx.stroke();
+
+      drawWeb(mouse.x, mouse.y, 30*scale, 0.8*scale);
+
+      // Titik di pusat jaring
+      ctx.fillStyle = `rgba(255,45,77,${scale})`;
+      ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 2.5, 0, Math.PI*2); ctx.fill();
+
+      const tilt = Math.max(-18, Math.min(18, -tag.vx*1.6));
+      label.style.transform = `translate(${tag.x - w/2}px, ${tag.y - h/2}px) rotate(${tilt}deg)`;
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+<!-- ===== AKHIR TEKS PENGIKUT KURSOR ===== -->
+
+</body>
+</html>

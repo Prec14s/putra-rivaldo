@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sertifikasi — Putra Rivaldo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c12; --panel:#141827; --line:#232a3d;
+    --ink:#eef1f7; --ink-dim:#9aa3b8; --ink-faint:#5c657c;
+    --red:#c8102e; --red-glow:#ff2d4d; --blue:#2447c4; --blue-glow:#4e78ff;
+    --mono:'IBM Plex Mono', monospace; --sans:'Inter', sans-serif; --display:'Archivo Black', sans-serif;
+    --gap:22px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;
+    background-image:
+      radial-gradient(ellipse 900px 500px at 85% -5%, rgba(200,16,46,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -5% 40%, rgba(36,71,196,0.10), transparent 60%);
+  }
+  main{flex:1;position:relative;z-index:1;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--red);color:#fff;}
+  :focus-visible{outline:2px solid var(--blue-glow);outline-offset:3px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* NAV */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,18,0.72);border-bottom:1px solid var(--line);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;max-width:1180px;margin:0 auto;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:600;font-size:15px;}
+  .logo-mark{width:30px;height:30px;flex:none;}
+  .navlinks{display:none;gap:34px;font-family:var(--mono);font-size:13px;letter-spacing:0.04em;color:var(--ink-dim);}
+  @media(min-width:760px){.navlinks{display:flex;}}
+  .navlinks a{position:relative;padding:4px 0;transition:color .2s;}
+  .navlinks a:hover,.navlinks a.active{color:var(--ink);}
+  .navlinks a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:1.5px;background:var(--red);transition:width .25s;}
+  .navlinks a:hover::after,.navlinks a.active::after{width:100%;}
+
+  .btn{font-family:var(--mono);font-size:13.5px;letter-spacing:0.02em;padding:13px 24px;border-radius:3px;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;transition:all .2s;cursor:pointer;background:none;color:var(--ink);}
+  .btn-ghost{border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--ink-faint);background:var(--panel);}
+
+  /* HEAD */
+  .page-head{padding:72px 0 40px;}
+  .back{font-family:var(--mono);font-size:12.5px;color:var(--ink-dim);display:inline-block;margin-bottom:28px;}
+  .back:hover{color:var(--ink);}
+  .page-head h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,5.4vw,58px);line-height:1.04;letter-spacing:-0.01em;margin-bottom:16px;}
+  .page-head p{color:var(--ink-dim);max-width:560px;font-size:16px;}
+
+  /* ---------- SLIDER ---------- */
+  .slider{padding-bottom:90px;}
+  .slider-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;}
+  .count{font-family:var(--mono);font-size:12.5px;color:var(--ink-dim);}
+  .arrows{display:flex;gap:10px;}
+  .arrow{
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);
+    color:var(--ink);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:border-color .2s,background .2s,opacity .2s;
+  }
+  .arrow:hover:not(:disabled){border-color:var(--red);background:var(--red);}
+  .arrow:disabled{opacity:.35;cursor:default;}
+
+  .track{
+    display:grid;grid-auto-flow:column;
+    grid-auto-columns:calc((100% - 2 * var(--gap)) / 3);   /* 3 kartu per layar */
+    gap:var(--gap);
+    overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    padding:8px 0 14px;
+    scrollbar-width:none;cursor:grab;
+  }
+  .track::-webkit-scrollbar{display:none;}
+  .track.dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto;}
+  .track.dragging .cert{pointer-events:none;}
+  @media(max-width:900px){.track{grid-auto-columns:calc((100% - var(--gap)) / 2);}}
+  @media(max-width:600px){.track{grid-auto-columns:85%;}}
+
+  .progress{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:8px;}
+  .progress span{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--red-glow));border-radius:3px;transition:width .15s,margin-left .15s;}
+
+  .cert{
+    scroll-snap-align:start;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    display:flex;flex-direction:column;text-align:left;cursor:zoom-in;
+    transition:transform .25s,border-color .25s;color:inherit;font:inherit;padding:0;
+  }
+  .cert:hover{transform:translateY(-4px);border-color:var(--red);}
+  .thumb{aspect-ratio:1.414/1;background:#0d101a;position:relative;overflow:hidden;border-bottom:1px solid var(--line);padding:10px;}
+  .thumb img{width:100%;height:100%;object-fit:contain;display:block;-webkit-user-drag:none;user-select:none;}
+  .thumb .missing{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;
+    padding:20px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+    background:repeating-linear-gradient(135deg,transparent 0 12px,rgba(255,255,255,0.02) 12px 24px);
+  }
+  .cert-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;}
+  .cert-title{font-weight:700;font-size:15.5px;line-height:1.35;}
+  .cert-meta{font-size:13px;color:var(--ink-dim);}
+  .cert-cat{align-self:flex-start;margin-top:8px;font-family:var(--mono);font-size:10.5px;color:var(--blue-glow);border:1px solid rgba(78,120,255,0.35);padding:3px 9px;border-radius:12px;}
+
+  .empty{text-align:center;color:var(--ink-dim);padding:60px 0;border:1px dashed var(--line);border-radius:10px;}
+
+  /* ---------- LIGHTBOX + ZOOM ---------- */
+  .lightbox{
+    position:fixed;inset:0;z-index:100;
+    display:none;align-items:center;justify-content:center;padding:32px;
+  }
+  .lightbox.open{display:flex;}
+  .lb-backdrop{position:absolute;inset:0;background:rgba(5,6,10,0.92);backdrop-filter:blur(6px);}
+  .lb-inner{position:relative;max-width:1000px;width:100%;display:flex;flex-direction:column;gap:14px;}
+  .lb-inner img{
+    max-width:100%;max-height:78vh;object-fit:contain;border-radius:6px;
+    border:1px solid var(--line);margin:0 auto;background:#fff;
+    transform-origin:center center;will-change:transform;
+    box-shadow:0 30px 80px rgba(0,0,0,0.6);
+  }
+  .lb-caption{text-align:center;}
+  .lb-caption b{display:block;font-size:16px;}
+  .lb-caption span{font-size:13px;color:var(--ink-dim);}
+  .lb-caption a{color:var(--red-glow);font-size:13px;}
+  .lb-close{position:absolute;top:18px;right:22px;z-index:2;}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;text-align:center;position:relative;z-index:1;}
+  footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);}
+
+  /* ---------- SERTIFIKAT SPESIALISASI ---------- */
+.track{padding:16px 4px 22px;}   /* ruang agar cahaya border tidak terpotong */
+
+.cert.special{
+  border:2px solid var(--red-glow);
+  animation:special-blink 1.6s ease-in-out infinite;
+}
+@keyframes special-blink{
+  0%,100%{
+    border-color:var(--red-glow);
+    box-shadow:0 0 16px rgba(255,45,77,.55);
+  }
+  50%{
+    border-color:var(--blue-glow);
+    box-shadow:0 0 0 3px rgba(78,120,255,.18), 0 0 24px rgba(78,120,255,.6);
+  }
+}
+.special-badge{
+  position:absolute;top:10px;left:10px;z-index:2;
+  font-family:var(--mono);font-size:10.5px;font-weight:600;color:#fff;
+  background:var(--red);padding:4px 10px;border-radius:12px;
+  box-shadow:0 0 12px rgba(255,45,77,.6);
+  animation:badge-blink 1.6s ease-in-out infinite;
+}
+@keyframes badge-blink{
+  0%,100%{background:var(--red);box-shadow:0 0 12px rgba(255,45,77,.6);}
+  50%{background:var(--blue);box-shadow:0 0 12px rgba(78,120,255,.6);}
+}
+</style>
+</head>
+<body>
+
+<canvas id="webCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
+<header>
+  <nav>
+    <a href="../index.html" class="logo" aria-label="Kembali ke beranda">
+      <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" stroke="#c8102e" stroke-width="1.4"/>
+        <path d="M16 1v30M1 16h30M5 5l22 22M27 5L5 27M9 1.5L16 16l7-14.5M9 30.5L16 16l7 14.5M1.5 9L16 16 1.5 23M30.5 9L16 16l14.5 7" stroke="#c8102e" stroke-width="0.7" opacity="0.65"/>
+      </svg>
+      <span style="color:var(--red-glow)">Sertifikasi</span>
+    </a>
+    <div class="navlinks">
+      <a href="../tentang/tentang.html">Tentang</a>
+      <a href="../keahlian/keahlian.html">Keahlian</a>
+      <a href="../proyek/proyek.html">Proyek</a>
+      <a href="sertifikasi.html" class="active" aria-current="page">Sertifikasi</a>
+      <a href="../kontak/kontak.html">Kontak</a>
+    </div>
+    <a href="../kontak/kontak.html" class="btn btn-ghost" style="padding:9px 18px;">Hubungi</a>
+  </nav>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <a href="../index.html" class="back">← Kembali ke beranda</a>
+      <h1>Sertifikasi skill</h1>
+      <p>Kumpulan sertifikat dari kursus, bukti bahwa saya serius di bidang web development. Geser untuk melihat lainnya, klik untuk memperbesar.</p>
+    </div>
+  </section>
+
+  <div class="wrap slider">
+    <div class="slider-top">
+      <span class="count" id="count"></span>
+      <div class="arrows">
+        <button class="arrow" id="prev" aria-label="Sertifikat sebelumnya">←</button>
+        <button class="arrow" id="next" aria-label="Sertifikat berikutnya">→</button>
+      </div>
+    </div>
+    <div class="track" id="track"></div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Pratinjau sertifikat">
+  <div class="lb-backdrop" id="lbBackdrop"></div>
+  <button class="btn btn-ghost lb-close" id="lbClose">Tutup ✕</button>
+  <div class="lb-inner">
+    <img id="lbImg" alt="">
+    <div class="lb-caption" id="lbCaption">
+      <b id="lbTitle"></b>
+      <span id="lbMeta"></span>
+      <div id="lbLink"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Putra Rivaldo. Dibangun dengan Laravel &amp; sedikit sihir CSS.</p>
+</footer>
+
+<script>
+/* =========================================================
+   DAFTAR SERTIFIKAT — CUKUP EDIT BAGIAN INI
+   ---------------------------------------------------------
+   - judul    : nama sertifikat
+   - penerbit : lembaga yang mengeluarkan
+   - tahun    : tahun terbit
+   - kategori : label kecil di kartu (boleh dikosongkan "")
+   - gambar   : path ke file gambar (jpg/png/webp)
+   - link     : (opsional) URL verifikasi, "" jika tidak ada
+   ========================================================= */
+const SERTIFIKAT = [
+  {
+    judul: "HOW WORKS DEVELOPMENT WEBSITE",
+    penerbit: "MySkill",
+    tahun: "2026",
+    kategori: "Basic",
+    gambar: "pict/hwdw.jpg",
+    link: ""
+  },
+  {
+    judul: "INTERNET INTRODUCTION",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Internet",
+    gambar: "pict/internet-intro.png",
+    link: "",
+   
+  },
+  {
+    judul: "BACKEND INTRODUCTION",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "pict/be-intro.png",
+    link: ""
+  },
+  {
+    judul: "FRONTEND INTRODUCTION",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Frontend",
+    gambar: "pict/fe-introduction.png",
+    link: ""
+  },
+  {
+    judul: "CAREER IN WEBSITE DEVELOPMENT",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Career",
+    gambar: "pict/career-in-website-dev.png",
+    link: ""
+  },
+  {
+    judul: "RESPONSIVE WEBSITE DESIGN",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Frontend",
+    gambar: "pict/responsive-web.png",
+    link: ""
+  },
+  {
+    judul: "IDE AND TEXT EDITOR",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Tools",
+    gambar: "pict/ide-te.png",
+    link: ""
+  },
+  {
+    judul: "WEBSITE DEVELOPMENT FUNDAMENTALS",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Frontend",
+    gambar: "pict/wdf.png",
+    link: "",
+    spesialisasi: true
+  },
+  {
+    judul: "INTRODUCTION FLASK",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/intro-flask.png",
+    link: ""
+  },
+  {
+    judul: "YOUR FIRST FLASK APPLICATION",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/your-first.png",
+    link: ""
+  },
+  {
+    judul: "SESSION , REDIRECT , ERROR",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/SRE.png",
+    link: ""
+  },
+  {
+    judul: "REST-API",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/rest-api.png",
+    link: ""
+  },
+  {
+    judul: "TEMPLATES IN FLASK",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/template-flask.png",
+    link: ""
+  },
+  {
+    judul: "AUTHENTICATION",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/authen.png",
+    link: ""
+  },
+  {
+    judul: "DATABASE",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/db-flask.png",
+    link: ""
+  },
+  {
+    judul: "BUILDING A BLOGGING PLATFORM",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/build-blog.png",
+    link: ""
+  },
+  {
+    judul: "DEPLOYING FLASK TO PRODUCTION",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/deploying.png",
+    link: ""
+  },
+  {
+    judul: "REQUEST AND RESPONSE",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/req-ponse.png",
+    link: ""
+  },
+  {
+    judul: "BACKEND FLASK",
+    penerbit: "Myskill",
+    tahun: "2026",
+    kategori: "Backend",
+    gambar: "be-flask/last-flask.png",
+    link: "",
+    spesialisasi: true
+  },
+];
+/* ========================================================= */
+
+(function(){
+  const track = document.getElementById('track');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const bar = document.getElementById('bar');
+  const count = document.getElementById('count');
+
+  /* ----- Buat kartu ----- */
+  if (!SERTIFIKAT.length){
+    track.outerHTML = '<div class="empty">Belum ada sertifikat. Tambahkan data di array SERTIFIKAT pada file ini.</div>';
+    return;
+  }
+  SERTIFIKAT.forEach(s => {
+    const card = document.createElement('button');
+    card.className = 'cert';
+        if (s.spesialisasi) card.classList.add('special');
+    card.type = 'button';
+    card.setAttribute('aria-label', 'Perbesar sertifikat ' + s.judul);
+
+    const thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    const img = document.createElement('img');
+        if (s.spesialisasi){
+      const badge = document.createElement('span');
+      badge.className = 'special-badge';
+      badge.textContent = '★ Spesialisasi';
+      thumb.appendChild(badge);
+    }
+    img.src = s.gambar; img.alt = s.judul; img.draggable = false;
+    img.onerror = () => {
+      img.remove();
+      const m = document.createElement('div');
+      m.className = 'missing';
+      m.textContent = 'Gambar tidak ditemukan: ' + s.gambar;
+      thumb.appendChild(m);
+    };
+    thumb.appendChild(img);
+
+    const body = document.createElement('div');
+    body.className = 'cert-body';
+    body.innerHTML = '<div class="cert-title"></div><div class="cert-meta"></div>' + (s.kategori ? '<span class="cert-cat"></span>' : '');
+    body.querySelector('.cert-title').textContent = s.judul;
+    body.querySelector('.cert-meta').textContent = [s.penerbit, s.tahun].filter(Boolean).join(', ');
+    if (s.kategori) body.querySelector('.cert-cat').textContent = s.kategori;
+
+    card.append(thumb, body);
+    card.addEventListener('click', () => buka(s, card));
+    track.appendChild(card);
+  });
+
+  /* ----- Slider: tombol, progress, penghitung ----- */
+  function lebarGeser(){
+    const card = track.querySelector('.cert');
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return card ? card.getBoundingClientRect().width + gap : track.clientWidth;
+  }
+  function perLayar(){ return Math.max(1, Math.round((track.clientWidth + 1) / lebarGeser())); }
+
+  function update(){
+    const max = track.scrollWidth - track.clientWidth;
+    const pos = track.scrollLeft;
+    prev.disabled = pos <= 2;
+    next.disabled = pos >= max - 2;
+
+    const n = SERTIFIKAT.length, tampil = Math.min(perLayar(), n);
+    const awal = Math.min(n - tampil, Math.round(pos / lebarGeser())) + 1;
+    count.textContent = (tampil > 1 ? awal + '–' + (awal + tampil - 1) : awal) + ' dari ' + n + ' sertifikat';
+
+    const lebar = Math.min(100, (track.clientWidth / track.scrollWidth) * 100);
+    bar.style.width = lebar + '%';
+    bar.style.marginLeft = (max > 0 ? (pos / max) * (100 - lebar) : 0) + '%';
+  }
+  prev.onclick = () => track.scrollBy({ left: -lebarGeser() * perLayar(), behavior: 'smooth' });
+  next.onclick = () => track.scrollBy({ left:  lebarGeser() * perLayar(), behavior: 'smooth' });
+  track.addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update);
+  update();
+
+  /* ----- Geser dengan mouse (drag) ----- */
+  let tekan = false, geser = false, startX = 0, startScroll = 0;
+  track.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;       // sentuhan layar sudah bisa geser sendiri
+    tekan = true; geser = false; startX = e.clientX; startScroll = track.scrollLeft;
+  });
+  addEventListener('pointermove', e => {
+    if (!tekan) return;
+    const dx = e.clientX - startX;
+    if (!geser && Math.abs(dx) > 6){ geser = true; track.classList.add('dragging'); }
+    if (geser) track.scrollLeft = startScroll - dx;
+  });
+  addEventListener('pointerup', () => {
+    if (!tekan) return;
+    tekan = false;
+    if (geser){
+      track.classList.remove('dragging');
+      // rapikan ke kartu terdekat
+      const step = lebarGeser();
+      track.scrollTo({ left: Math.round(track.scrollLeft / step) * step, behavior: 'smooth' });
+      // cegah klik tidak sengaja setelah menggeser
+      track.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); }, { capture: true, once: true });
+      setTimeout(() => { geser = false; }, 0);
+    }
+  });
+
+  /* ----- Lightbox dengan animasi zoom ----- */
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const backdrop = document.getElementById('lbBackdrop');
+  const caption = document.getElementById('lbCaption');
+  const closeBtn = document.getElementById('lbClose');
+  let kartuAktif = null, animasiJalan = false;
+  const EASE = 'cubic-bezier(.2,.8,.2,1)';
+
+  function asal(card){
+    const img = card.querySelector('.thumb img') || card.querySelector('.thumb');
+    return img.getBoundingClientRect();
+  }
+  function transformDari(from, to){
+    const s = Math.min(from.width / to.width, from.height / to.height);
+    const dx = (from.left + from.width / 2) - (to.left + to.width / 2);
+    const dy = (from.top + from.height / 2) - (to.top + to.height / 2);
+    return `translate(${dx}px, ${dy}px) scale(${s})`;
+  }
+
+  async function buka(s, card){
+    if (animasiJalan) return;
+    animasiJalan = true;
+    kartuAktif = card;
+
+    lbImg.src = s.gambar; lbImg.alt = s.judul;
+    document.getElementById('lbTitle').textContent = s.judul;
+    document.getElementById('lbMeta').textContent = [s.penerbit, s.tahun].filter(Boolean).join(', ');
+    const link = document.getElementById('lbLink');
+    link.innerHTML = '';
+    if (s.link){
+      const a = document.createElement('a');
+      a.href = s.link; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = 'Verifikasi sertifikat';
+      link.appendChild(a);
+    }
+
+    try { await lbImg.decode(); } catch(e){}
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    card.style.visibility = 'hidden';                 // kartu "terangkat" ke tengah
+
+    const to = lbImg.getBoundingClientRect();
+    const from = asal(card);
+    const dur = 480;
+    backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dur, easing: 'ease-out' });
+    caption.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: dur, delay: dur * 0.5, easing: EASE, fill: 'backwards' });
+    closeBtn.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dur, easing: 'ease-out' });
+    await lbImg.animate(
+      [{ transform: transformDari(from, to), borderRadius: '10px' }, { transform: 'none', borderRadius: '6px' }],
+      { duration: dur, easing: EASE }
+    ).finished;
+
+    closeBtn.focus();
+    animasiJalan = false;
+  }
+
+  async function tutup(){
+    if (animasiJalan || !lb.classList.contains('open')) return;
+    animasiJalan = true;
+    const to = lbImg.getBoundingClientRect();
+    const from = asal(kartuAktif);
+    const dur = 380;
+    backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: dur, easing: 'ease-in', fill: 'forwards' });
+    caption.animate([{ opacity: 1 }, { opacity: 0 }], { duration: dur * 0.4, fill: 'forwards' });
+    closeBtn.animate([{ opacity: 1 }, { opacity: 0 }], { duration: dur * 0.4, fill: 'forwards' });
+    await lbImg.animate(
+      [{ transform: 'none' }, { transform: transformDari(from, to) }],
+      { duration: dur, easing: EASE, fill: 'forwards' }
+    ).finished;
+
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    [lbImg, backdrop, caption, closeBtn].forEach(el => el.getAnimations().forEach(a => a.cancel()));
+    kartuAktif.style.visibility = '';
+    kartuAktif.focus({ preventScroll: true });
+    animasiJalan = false;
+  }
+
+  closeBtn.onclick = tutup;
+  backdrop.onclick = tutup;
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') tutup();
+    if (!lb.classList.contains('open')){
+      if (e.key === 'ArrowRight' && document.activeElement.closest('.slider')) next.click();
+      if (e.key === 'ArrowLeft' && document.activeElement.closest('.slider')) prev.click();
+    }
+  });
+})();
+
+/* ----- Latar jaring laba-laba ----- */
+(function(){
+  const canvas = document.getElementById('webCanvas');
+  const ctx = canvas.getContext('2d');
+  let width, height, particles = [];
+  const mouse = { x:null, y:null, maxDist:170 };
+
+  function resize(){ width = canvas.width = innerWidth; height = canvas.height = innerHeight; init(); }
+  addEventListener('resize', resize);
+  addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  addEventListener('mouseleave', () => { mouse.x = mouse.y = null; });
+
+  function init(){
+    particles = [];
+    const count = Math.min(Math.floor((width * height) / 9500), 120);
+    for (let i = 0; i < count; i++){
+      particles.push({
+        x: Math.random()*width, y: Math.random()*height,
+        vx: (Math.random()-0.5)*1.2, vy: (Math.random()-0.5)*1.2,
+        r: Math.random()*2+1,
+        c: Math.random() > 0.3 ? '255,45,77' : '78,120,255',
+        a: Math.random()*0.5+0.4
+      });
+    }
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,width,height);
+    for (const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${p.c},${p.a})`; ctx.fill();
+    }
+    for (let i = 0; i < particles.length; i++){
+      for (let j = i+1; j < particles.length; j++){
+        const d = Math.hypot(particles[i].x-particles[j].x, particles[i].y-particles[j].y);
+        if (d < 140){
+          ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle = `rgba(200,30,70,${(1-d/140)*0.35})`; ctx.lineWidth = 0.8; ctx.stroke();
+        }
+      }
+      if (mouse.x !== null){
+        const d = Math.hypot(particles[i].x-mouse.x, particles[i].y-mouse.y);
+        if (d < mouse.maxDist){
+          ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(mouse.x,mouse.y);
+          ctx.strokeStyle = `rgba(255,45,77,${(1-d/mouse.maxDist)*0.75})`; ctx.lineWidth = 1.2; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  resize();
+  animate();
+})();
+</script>
+</body>
+</html>
